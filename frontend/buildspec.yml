@@ -4,7 +4,7 @@ phases:
   pre_build:
     commands:
       # Get Region
-      - TOKEN=curl -X PUT "<http://169.254.169.254/latest/api/token>" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"
+      - TOKEN=$(curl -X PUT "<http://169.254.169.254/latest/api/token>" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
       - export AWS_REGION=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/region)
       - echo "export AWS_REGION=${AWS_REGION}" | tee -a ~/.bash_profile
       - aws configure set default.region ${AWS_REGION}
