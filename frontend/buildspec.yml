@@ -3,32 +3,38 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      # Login to Amazon ECR
-      - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_NUMBER}.dkr.ecr.${AWS_REGION}.amazonaws.com
-      # Set the image tag using CodeBuild source version
-      - IMAGE_TAG=${CODEBUILD_RESOLVED_SOURCE_VERSION}
-      # Set the full URI for the Docker image
-      - IMAGE_URI=${AWS_ACCOUNT_NUMBER}.dkr.ecr.${AWS_REGION}.amazonaws.com/${CI_PROJECT_FE_NAME}:${IMAGE_TAG}
-  
+      # Get Region
+      - TOKEN=curl -X PUT "<http://169.254.169.254/latest/api/token>" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"
+      - export AWS_REGION=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/region)
+      - echo "export AWS_REGION=${AWS_REGION}" | tee -a ~/.bash_profile
+      - aws configure set default.region ${AWS_REGION}
+      # Get AWS_ACCOUNT_ID
+      - export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+      - echo "export AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}" | tee -a ~/.bash_profile
+      # Get REPOSITORY_URI
+      - export IMAGE_REPO_NAME=fcj-lmduc5
+      - export REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME
+      # Login ECR
+      - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+      - echo "Login Successfull"
+      - export COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - export IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
     commands:
       # Navigate to frontend directory and build Docker image
       - cd frontend
-      - docker build -f Dockerfile.prod -t ${IMAGE_URI} .
+      - docker build -f Dockerfile.prod -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
       
   post_build:
     commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
       # Push the Docker image to ECR
-      - docker push ${IMAGE_URI}
-      
-      # Get the current task definition from ECS
-      - TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${TASK_NAME_FE} --region ${AWS_REGION})
-      
-      # Create new task definition with updated image
-      - NEW_TASK_DEFINITION=$(echo $TASK_DEFINITION | jq --arg IMAGE "${IMAGE_URI}" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
-      
-      # Register the new task definition
-      - aws ecs register-task-definition --region ${AWS_REGION} --cli-input-json "$NEW_TASK_DEFINITION"
-      
-      # Update the ECS service to use the new task definition
-      - aws ecs update-service --region ${AWS_REGION} --cluster ${CLUSTER_NAME} --service ${SERVICE_NAME_FE} --task-definition ${TASK_NAME_FE} --force-new-deployment
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      # Writing File Atifact
+      - echo Writing image definitions file...
+      - printf '[{"name":"frontend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+artifacts:
+    files: imagedefinitions.json
