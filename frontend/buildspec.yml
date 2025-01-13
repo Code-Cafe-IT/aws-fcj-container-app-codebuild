@@ -4,7 +4,7 @@ phases:
   pre_build:
     commands:
       # Get Region
-      - TOKEN=$(curl -X PUT "<http://169.254.169.254/latest/api/token>" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+      - TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
       - export AWS_REGION=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/region)
       - echo "export AWS_REGION=${AWS_REGION}" | tee -a ~/.bash_profile
       - aws configure set default.region ${AWS_REGION}
@@ -16,7 +16,7 @@ phases:
       - export REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME
       # Login ECR
       - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-      - echo "Login Successfull"
+      - echo "Login Successful"
       - export COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - export IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
@@ -33,8 +33,9 @@ phases:
       # Push the Docker image to ECR
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      # Writing File Atifact
+      # Writing File Artifact
       - echo Writing image definitions file...
       - printf '[{"name":"frontend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
-    files: imagedefinitions.json
+  files:
+    - imagedefinitions.json
