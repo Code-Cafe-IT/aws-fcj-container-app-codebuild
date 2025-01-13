@@ -36,12 +36,7 @@ phases:
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       # Writing File Artifact
       - echo Writing image definitions file...
-      - mkdir build/
-      - printf '{"Version":"Frontend","ImageURI":"%s"}' "${ECR_REPOSITORY_URI}:${IMAGE_TAG}" > build/imageDetail.json
-      - ls -al build/
-      - cat build/imageDetail.json
+      - printf '[{"name":"frontend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - ls -al
 artifacts:
-  files:
-    - build/imageDetail.json
-    - appspec.yml
-
+    files: imagedefinitions.json
