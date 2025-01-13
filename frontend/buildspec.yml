@@ -39,4 +39,5 @@ phases:
       - printf '[{"name":"frontend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       - ls -al
 artifacts:
-    files: imagedefinitions.json
+  files:
+    - imagedefinitions.json
