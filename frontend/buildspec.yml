@@ -37,7 +37,7 @@ phases:
       # Writing File Artifact
       - echo Writing image definitions file...
       - mkdir build/
-      - printf '{"Version":"1.0","ImageURI":"%s"}' "${ECR_REPOSITORY_URI}:${IMAGE_TAG}" > build/imageDetail.json
+      - printf '{"Version":"Frontend","ImageURI":"%s"}' "${ECR_REPOSITORY_URI}:${IMAGE_TAG}" > build/imageDetail.json
       - ls -al build/
       - cat build/imageDetail.json
 artifacts:
