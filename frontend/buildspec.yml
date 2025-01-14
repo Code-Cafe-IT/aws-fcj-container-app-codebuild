@@ -36,10 +36,10 @@ phases:
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       # Writing File Artifact
       - echo Writing image definitions file...
-      - printf '[{"name":"frontend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-      - ls -al
+      - printf '[{"name":"frontend","imageUri":"%s"}]' "$REPOSITORY_URI:$IMAGE_TAG" > imagedefinitions.json
+      - printf '[{"name":"frontend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions-1.json
       - pwd
-      - chmod 777 imagedefinitions.json
+      - cat imagedefinitions.json
 artifacts:
   files:
-    - /codebuild/output/src1371222724/src/frontend/imagedefinitions.json
+    - imagedefinitions.json
