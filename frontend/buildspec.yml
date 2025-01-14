@@ -36,12 +36,10 @@ phases:
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       # Writing File Artifact
       - echo Writing image definitions file...
-      - printf '[{"name":"frontend","imageUri":"%s"}]' "$REPOSITORY_URI:$IMAGE_TAG" > imagedefinitions.json
-      - printf '[{"name":"frontend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions-1.json
+      - printf '[{"name":"frontend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       - pwd
       - cat imagedefinitions.json
-      - cat imagedefinitions-1.json
       - find . -name "imagedefinitions.json"
 artifacts:
   files:
-    - imagedefinitions.json
+    - ./imagedefinitions.json
