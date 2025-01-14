@@ -42,4 +42,4 @@ phases:
       - chmod 777 imagedefinitions.json
 artifacts:
   files:
-    - imagedefinitions.json
+    - /codebuild/output/src1371222724/src/frontend/imagedefinitions.json
