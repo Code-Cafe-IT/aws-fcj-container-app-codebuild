@@ -39,6 +39,7 @@ phases:
       - printf '[{"name":"frontend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       - ls -al
       - pwd
+      - chmod 777 imagedefinitions.json
 artifacts:
   files:
     - imagedefinitions.json
