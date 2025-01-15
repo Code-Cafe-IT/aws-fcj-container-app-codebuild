@@ -52,44 +52,29 @@ phases:
       - CONTAINER_PORT=$(echo $TASK_DEFINITION | jq -r '.taskDefinition.containerDefinitions[0].portMappings[0].containerPort')
       
       # Create AppSpec content for CodeDeploy Blue/Green deployment
-      # - |
-      #   APP_SPEC=$(cat <<EOF
-      #   version: "0.0"
-      #   Resources:
-      #     - TargetService:
-      #         Type: "AWS::ECS::Service"
-      #         Properties:
-      #           TaskDefinition: "$AWS_TASK_DEFINITION_ARN"
-      #           LoadBalancerInfo:
-      #             ContainerName: "$CONTAINER_NAME"
-      #             ContainerPort: $CONTAINER_PORT
-      #   EOF
-      #   )
-      # - echo $APP_SPEC
+      - |
+        REVISION=$(cat <<EOF
+        version: "0.0"
+        Resources:
+          - TargetService:
+              Type: "AWS::ECS::Service"
+              Properties:
+                TaskDefinition: "$AWS_TASK_DEFINITION_ARN"
+                LoadBalancerInfo:
+                  ContainerName: "$CONTAINER_NAME"
+                  ContainerPort: $CONTAINER_PORT
+        EOF
+        )
+      - echo $REVISION
       # Create deployment revision with AppSpec content
-        # - |
         # REVISION=$(jq -n --arg appSpec "$APP_SPEC" '{
         #   revisionType: "AppSpecContent",
         #   appSpecContent: {
         #     content: $appSpec
         #   }
         # }')
-      - |
-        REVISION=$(cat <<EOF
-        revisionType: AppSpecContent
-        appSpecContent:
-          content:
-            version: "0.0"
-            Resources:
-              - TargetService:
-                  Type: "AWS::ECS::Service"
-                  Properties:
-                    TaskDefinition: "$AWS_TASK_DEFINITION_ARN"
-                    LoadBalancerInfo:
-                      ContainerName: "$CONTAINER_NAME"
-                      ContainerPort: $CONTAINER_PORT
-        EOF
-        )
+      # - |
+
 
       # Create new deployment in CodeDeploy-1
       - aws deploy create-deployment --region ${AWS_REGION} --application-name ${AWS_APPLICATION_NAME} --deployment-group-name ${AWS_DEPLOYMENT_GROUP_NAME} --revision "$REVISION"
