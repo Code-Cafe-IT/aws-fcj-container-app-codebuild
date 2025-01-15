@@ -3,8 +3,8 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - export AWS_APPLICATION_NAME=AppECS-FCJ-Lab-cluster-backend
       - export AWS_REGION=ap-northeast-1
+      - export AWS_APPLICATION_NAME=AppECS-FCJ-Lab-cluster-backend
       - export TASK_NAME_BE=fcjresbar-task-be
       - echo "export AWS_REGION=${AWS_REGION}" | tee -a ~/.bash_profile
       - aws configure set default.region ${AWS_REGION}
