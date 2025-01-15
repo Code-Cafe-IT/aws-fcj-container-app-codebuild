@@ -42,7 +42,7 @@ phases:
       # Get the current task definition from ECS
       - TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${TASK_NAME_BE} --region ${AWS_REGION})
       
-      # Create new task definition with updated image
+      # Create new task definition with updated image using json
       - NEW_TASK_DEFINITION=$(echo $TASK_DEFINITION | jq --arg IMAGE "$REPOSITORY_URI:$IMAGE_TAG" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
       - NEW_REVISION=$(aws ecs register-task-definition --region ${AWS_REGION} --cli-input-json "$NEW_TASK_DEFINITION")
       
@@ -67,13 +67,20 @@ phases:
         )
       - echo $APP_SPEC
       # Create deployment revision with AppSpec content
+        # REVISION=$(jq -n --arg appSpec "$APP_SPEC" '{
+        #   revisionType: "AppSpecContent",
+        #   appSpecContent: {
+        #     content: $appSpec
+        #   }
+        # }')
       - |
-        REVISION=$(jq -n --arg appSpec "$APP_SPEC" '{
-          revisionType: "AppSpecContent",
-          appSpecContent: {
-            content: $appSpec
-          }
-        }')
+        REVISION=$(cat <<EOF
+        revisionType: AppSpecContent
+        appSpecContent:
+          content: $appSpec
+        EOF
+        )
+
       
       # Create new deployment in CodeDeploy-1
       - aws deploy create-deployment --region ${AWS_REGION} --application-name ${AWS_APPLICATION_NAME} --deployment-group-name ${AWS_DEPLOYMENT_GROUP_NAME} --revision "$REVISION"
@@ -81,3 +88,4 @@ phases:
 artifacts:
   files:
     - imageDetail.json
+  base-directory: backend
