@@ -77,8 +77,8 @@ phases:
         REVISION=$(cat <<EOF
         revisionType: AppSpecContent
         appSpecContent:
-            content: |
-              $APP_SPEC
+          content: |
+            $APP_SPEC
         EOF
         )
 
