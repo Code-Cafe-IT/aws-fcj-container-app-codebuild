@@ -36,7 +36,7 @@ phases:
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       # Writing File Artifact
       - echo Writing image definitions file...
-      - printf '[{"name":"frontend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
+      - printf '[{"name":"backend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
       - cat imageDetail.json
       
       # Get the current task definition from ECS
@@ -68,12 +68,13 @@ phases:
       - echo $APP_SPEC 
         #Create deployment revision with AppSpec content
       - |
-          REVISION=$(jq -n --arg appSpec "$APP_SPEC" '{
-            revisionType: "AppSpecContent",
-            appSpecContent: {
-              content: $appSpec
-            }
-          }')
+        REVISION=$(jq -n --arg appSpec "$APP_SPEC" '{
+          revisionType: "AppSpecContent",
+          appSpecContent: {
+            content: $appSpec
+          }
+        }')
+      - echo $REVISION
 
       # Create new deployment in CodeDeploy-1
       - aws deploy create-deployment --region ${AWS_REGION} --application-name ${AWS_APPLICATION_NAME} --deployment-group-name ${AWS_DEPLOYMENT_GROUP_NAME} --revision "$REVISION"
