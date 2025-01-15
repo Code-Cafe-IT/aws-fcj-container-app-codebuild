@@ -67,21 +67,14 @@ phases:
         )
       - echo $APP_SPEC
       # Create deployment revision with AppSpec content
-        # REVISION=$(jq -n --arg appSpec "$APP_SPEC" '{
-        #   revisionType: "AppSpecContent",
-        #   appSpecContent: {
-        #     content: $appSpec
-        #   }
-        # }')
       - |
-        REVISION=$(cat <<EOF
-        revisionType: AppSpecContent
-        appSpecContent:
-          content: $appSpec
-        EOF
-        )
+        REVISION=$(jq -n --arg appSpec "$APP_SPEC" '{
+          revisionType: "AppSpecContent",
+          appSpecContent: {
+            content: $appSpec
+          }
+        }')
 
-      
       # Create new deployment in CodeDeploy-1
       - aws deploy create-deployment --region ${AWS_REGION} --application-name ${AWS_APPLICATION_NAME} --deployment-group-name ${AWS_DEPLOYMENT_GROUP_NAME} --revision "$REVISION"
 
