@@ -105,7 +105,7 @@ exports.deleteTable = asyncHandler(async (req, res) => {
 
     if (table) {
         await table.destroy();
-        res.json({ message: "Table removed" });
+        res.json({ message: "Tables removed" });
     } else {
         res.status(404);
         throw new Error("Table not found");
