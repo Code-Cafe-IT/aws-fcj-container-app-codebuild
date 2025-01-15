@@ -53,7 +53,7 @@ phases:
       
       # Create AppSpec content for CodeDeploy Blue/Green deployment
       - |
-        REVISION=$(cat <<EOF
+        APP_SPEC=$(cat <<EOF
         version: "0.0"
         Resources:
           - TargetService:
@@ -65,7 +65,7 @@ phases:
                   ContainerPort: $CONTAINER_PORT
         EOF
         )
-      - echo $REVISION
+      - echo $APP_SPEC 
       # Create deployment revision with AppSpec content
         # REVISION=$(jq -n --arg appSpec "$APP_SPEC" '{
         #   revisionType: "AppSpecContent",
@@ -73,8 +73,16 @@ phases:
         #     content: $appSpec
         #   }
         # }')
-      # - |
-
+      - |
+        REVISION=$(cat <<EOF
+        {
+          "revisionType": "AppSpecContent",
+          "appSpecContent": {
+            "content": "$(APP_SPEC)"
+          }
+        }
+        EOF
+        )
 
       # Create new deployment in CodeDeploy-1
       - aws deploy create-deployment --region ${AWS_REGION} --application-name ${AWS_APPLICATION_NAME} --deployment-group-name ${AWS_DEPLOYMENT_GROUP_NAME} --revision "$REVISION"
