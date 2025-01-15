@@ -53,7 +53,7 @@ phases:
       
       # Create AppSpec content for CodeDeploy Blue/Green deployment
       - |
-        cat <<EOF > appspec.yml
+        APP_SPEC=$(cat <<EOF
         version: "0.0"
         Resources:
           - TargetService:
@@ -64,7 +64,8 @@ phases:
                   ContainerName: "$CONTAINER_NAME"
                   ContainerPort: $CONTAINER_PORT
         EOF
-      
+        )
+      - echo $APP_SPEC
       # Create deployment revision with AppSpec content
       - |
         REVISION=$(jq -n --arg appSpec "$APP_SPEC" '{
