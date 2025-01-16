@@ -20,8 +20,7 @@ phases:
   build:
     commands:
       # Navigate to backend directory and build Docker image
-      # - cd backend
-      - mv backend/imageDetail.json .
+      - cd backend
       - docker build -f Dockerfile -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
       
@@ -36,7 +35,10 @@ phases:
       - echo Writing image definitions file...
       - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
       - cat imageDetail.json
+      - pwd
+      - ll
 artifacts:
   files:
     - imageDetail.json
     - appspec.yaml
+  base-directory: backend
