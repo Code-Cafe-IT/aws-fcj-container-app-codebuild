@@ -55,4 +55,4 @@ artifacts:
   files:
     - imageDetail.json
     - appspec.yaml
-  base-directory: backend
+  # base-directory: backend
