@@ -76,7 +76,7 @@ phases:
         }')
       - echo $REVISION
 
-      # Create new deployment in CodeDeploy-1
+      # Create new deployment in CodeDeploy-11
       - aws deploy create-deployment --region ${AWS_REGION} --application-name ${AWS_APPLICATION_NAME} --deployment-group-name ${AWS_DEPLOYMENT_GROUP_NAME} --revision "$REVISION"
 
 artifacts:
