@@ -3,6 +3,7 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - export TASK_NAME_BE=fcjresbar-task-be
       - export AWS_REGION=ap-northeast-1
       - echo "export AWS_REGION=${AWS_REGION}" | tee -a ~/.bash_profile
       - aws configure set default.region ${AWS_REGION}
@@ -23,7 +24,7 @@ phases:
       - cd backend
       - docker build -f Dockerfile -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
-      
+
   post_build:
     commands:
       - echo Build completed on `date`
@@ -35,11 +36,20 @@ phases:
       - echo Writing image definitions file...
       - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
       - cat imageDetail.json
+      # Get the current task definition from ECS
+      - TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${TASK_NAME_BE} --region ${AWS_REGION})
+
+      # Create new task definition with updated image using json
+      - NEW_TASK_DEFINITION=$(echo $TASK_DEFINITION | jq --arg IMAGE "$REPOSITORY_URI:$IMAGE_TAG" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
+      # - NEW_REVISION=$(aws ecs register-task-definition --region ${AWS_REGION} --cli-input-json "$NEW_TASK_DEFINITION")
+
+      # Extract required information for AppSpec
+      - AWS_TASK_DEFINITION_ARN=$(echo $TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
       # Set value image
-      - sed -i "s|{{ImageURI}}|$REPOSITORY_URI:$IMAGE_TAG|g" appspec.yaml
+      - sed -i "s|{{AWS_TASK_DEFINITION_ARN}}|$AWS_TASK_DEFINITION_ARN|g" appspec.yaml
       - cat appspec.yaml
       - pwd
-      - ls -al 
+      - ls -al
 artifacts:
   files:
     - imageDetail.json
