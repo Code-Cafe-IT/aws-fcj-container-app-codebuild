@@ -34,10 +34,10 @@ phases:
       # Writing File Artifactt
       - echo Writing image definitions file...
       - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
-      - cp imageDetail.json ../
       - cat imageDetail.json
       - pwd
 artifacts:
   files:
     - imageDetail.json
     - appspec.yaml
+  base-directory: backend
