@@ -43,7 +43,7 @@ phases:
       - NEW_TASK_DEFINITION=$(echo $TASK_DEFINITION | jq --arg IMAGE "$REPOSITORY_URI:$IMAGE_TAG" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)')
       - NEW_REVISION=$(aws ecs register-task-definition --region ${AWS_REGION} --cli-input-json "$NEW_TASK_DEFINITION")
 
-      # Extract required information for AppSpecc
+      # Extract required information for AppSpeccc
       - DESCRIBE_NEW_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${TASK_NAME_BE} --region ${AWS_REGION})
       - echo $DESCRIBE_NEW_TASK_DEFINITION
       - AWS_TASK_DEFINITION_ARN=$(echo $DESCRIBE_NEW_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
