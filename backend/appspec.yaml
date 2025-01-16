@@ -4,7 +4,7 @@ Resources:
   - TargetService:
       Type: AWS::ECS::Service
       Properties:
-        TaskDefinition: "$AWS_TASK_DEFINITION_ARN"
+        TaskDefinition: "{{ImageURI}}"
         LoadBalancerInfo: 
-          ContainerName: "$CONTAINER_NAME"
-          ContainerPort: $CONTAINER_PORT
+          ContainerName: "backend"
+          ContainerPort: 80

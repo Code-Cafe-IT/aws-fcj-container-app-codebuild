@@ -35,6 +35,9 @@ phases:
       - echo Writing image definitions file...
       - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
       - cat imageDetail.json
+      # Set value image
+      - sed -i "s|{{ImageURI}}|$REPOSITORY_URI:$IMAGE_TAG|g" appspec.yaml
+      - cat appspec.yaml
       - pwd
       - ls -al 
 artifacts:
