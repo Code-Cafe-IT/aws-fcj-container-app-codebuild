@@ -34,10 +34,9 @@ phases:
       # Push the Docker image to ECR
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      # Writing File Artifact
+      # Writing File Artifactt
       - echo Writing image definitions file...
       - printf '[{"name":"frontend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-      - pwd
       - cat imagedefinitions.json
 artifacts:
   files:

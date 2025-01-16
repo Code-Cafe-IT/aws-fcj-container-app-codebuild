@@ -31,12 +31,12 @@ phases:
       # Push the Docker image to ECR
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      # Writing File Artifact
+      # Writing File Artifactt
       - echo Writing image definitions file...
       - printf '[{"name":"backend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
       - cat imageDetail.json
 artifacts:
   files:
     - imageDetail.json
-    - appspec.yml
+    - appspec.yaml
   base-directory: backend
