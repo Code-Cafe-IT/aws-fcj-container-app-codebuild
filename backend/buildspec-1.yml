@@ -46,7 +46,7 @@ phases:
       # Extract required information for AppSpec
       - DESCRIBE_NEW_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${TASK_NAME_BE} --region ${AWS_REGION})
       - AWS_TASK_DEFINITION_ARN=$(echo $DESCRIBE_NEW_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
-      # Set value image
+      # Set value imagee
       - sed -i "s|{{AWS_TASK_DEFINITION_ARN}}|$AWS_TASK_DEFINITION_ARN|g" appspec.yaml
       - cat appspec.yaml
       - pwd
