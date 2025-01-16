@@ -38,4 +38,5 @@ phases:
 artifacts:
   files:
     - imageDetail.json
+    - appspec.yml
   base-directory: backend
