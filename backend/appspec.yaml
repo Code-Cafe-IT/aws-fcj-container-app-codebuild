@@ -1,11 +1,11 @@
 #   https://docs.aws.amazon.com/codedeploy/latest/userguide/app-spec-ref.html
-# TaskDefinition: "{{AWS_TASK_DEFINITION_ARN}}"
+# TaskDefinition: "{{AWS_TASK_DEFINITION_ARN}}" {{TASK_DEFINITION}}
 version: 0.0
 Resources:
   - TargetService:
       Type: AWS::ECS::Service
       Properties:
-        TaskDefinition: {{TASK_DEFINITION}}
+        TaskDefinition: <TASK_DEFINITION>
         LoadBalancerInfo: 
           ContainerName: "backend"
           ContainerPort: 5000

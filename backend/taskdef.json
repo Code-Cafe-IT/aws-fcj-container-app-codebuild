@@ -1,10 +1,10 @@
 {
     "family": "fcjresbar-task-be",
-    "taskDefinitionArn": "{{TASK_DEFINITION}}",
+    "taskDefinitionArn": "<TASK_DEFINITION>",
     "containerDefinitions": [
         {
             "name": "backend",
-            "image": "{IMAGE_NAME}",
+            "image": "<IMAGE_NAME>",
             "cpu": 1024,
             "memory": 2048,
             "portMappings": [
