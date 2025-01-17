@@ -58,11 +58,11 @@ artifacts:
     - appspec.yaml
     - taskdef.json
   secondary-artifacts:
-  DefinitionArtifact:
-    files:
-      - appspec.yaml
-      - taskdef.json
-  ImageArtifact:
-    files:
-      - imageDetail.json
+    DefinitionArtifact:
+      files:
+        - appspec.yaml
+        - taskdef.json
+    ImageArtifact:
+      files:
+        - imageDetail.json
   base-directory: backend
