@@ -44,7 +44,7 @@
 ## About the Project
 ## Project đã được kế thừa và thay đổi so với ban đầu ở các file buildspec.yaml trong cả Frontend và Backend
 ## Được triển khai theo dạng CodePipeline + CodeDeploy + CodeBuild, KHÔNG THEO LUỒNG PIPELINE BAN ĐẦU
-## Trong Backend đã tách cấu hình ra bao add thêm File Appspec.yaml + taskdef.json
+## Trong Backend đã tách cấu hình file buildspec.yml, add thêm File Appspec.yaml + taskdef.json
 
 ![]()
 [![Restobar Screen Shot](https://i.ibb.co/YZStk7w/restobar.png)](https://restobar-example.herokuapp.com/)
