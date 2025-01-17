@@ -35,6 +35,7 @@ phases:
       # Writing File Artifacttss
       - echo Writing image definitions file...
       - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
+      - sleep(60)
       - DESCRIBE_NEW_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${TASK_NAME_BE} --region ${AWS_REGION})
       - AWS_TASK_DEFINITION_ARN=$(echo $DESCRIBE_NEW_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
       - sed -i "s|{{TASK_DEFINITION}}|$AWS_TASK_DEFINITION_ARN|g" appspec.yaml
