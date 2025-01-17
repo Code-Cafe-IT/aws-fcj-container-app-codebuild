@@ -48,7 +48,7 @@ phases:
       # - echo $DESCRIBE_NEW_TASK_DEFINITION
       # - AWS_TASK_DEFINITION_ARN=$(echo $DESCRIBE_NEW_TASK_DEFINITION | jq -r '.taskDefinition.taskDefinitionArn')
       # Set value image
-      # - sed -i "s|{{TASK_DEFINITION}}|$AWS_TASK_DEFINITION_ARN|g" appspec.yaml
+      - sed -i "s|{{IMAGE_URL}}|$REPOSITORY_URI:$IMAGE_TAG|g" taskdef.json
       - cat appspec.yaml
       - pwd
       - ls -al
@@ -56,4 +56,13 @@ artifacts:
   files:
     - imageDetail.json
     - appspec.yaml
+    - taskdef.json
+  secondary-artifacts:
+  DefinitionArtifact:
+    files:
+      - appspec.yaml
+      - taskdef.json
+  ImageArtifact:
+    files:
+      - imageDetail.json
   base-directory: backend

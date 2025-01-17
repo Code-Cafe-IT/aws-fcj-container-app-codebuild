@@ -1,0 +1,83 @@
+{
+    "family": "fcjresbar-task-be",
+    "taskDefinitionArn": "{{TASK_DEFINITION}}",
+    "containerDefinitions": [
+        {
+            "name": "backend",
+            "image": "{{IMAGE_URL}}",
+            "cpu": 1024,
+            "memory": 2048,
+            "portMappings": [
+                {
+                    "name": "task-definitions-80-tcp",
+                    "containerPort": 5000,
+                    "hostPort": 5000,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "MYSQL_DATABASE",
+                    "value": "fcjresbar"
+                },
+                {
+                    "name": "MYSQL_PASSWORD",
+                    "value": "1234567890"
+                },
+                {
+                    "name": "DB_DIALECT",
+                    "value": "mysql"
+                },
+                {
+                    "name": "PORT",
+                    "value": "5000"
+                },
+                {
+                    "name": "JWT_SECRET",
+                    "value": "0bac010eca699c25c8f62ba86e319c2305beb94641b859c32518cb854addb5f4"
+                },
+                {
+                    "name": "MYSQL_USER",
+                    "value": "admin"
+                },
+                {
+                    "name": "DB_HOST",
+                    "value": "lmduc5-rds-mysql.c8h3qoeqqyhd.ap-northeast-1.rds.amazonaws.com"
+                }
+            ],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/fcjresbar-task-be",
+                    "mode": "non-blocking",
+                    "awslogs-create-group": "true",
+                    "max-buffer-size": "25m",
+                    "awslogs-region": "ap-northeast-1",
+                    "awslogs-stream-prefix": "ecs"
+                },
+                "secretOptions": []
+            },
+            "systemControls": []
+        }
+    ],
+    "executionRoleArn": "arn:aws:iam::187091248012:role/lmduc5-ecs",
+    "networkMode": "awsvpc",
+    "volumes": [],
+    "placementConstraints": [],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "2048",
+    "memory": "4096",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "enableFaultInjection": false
+}
