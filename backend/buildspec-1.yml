@@ -32,7 +32,7 @@ phases:
       # Push the Docker image to ECR
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      # Writing File Artifactt
+      # Writing File Artifactts
       - echo Writing image definitions file...
       - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
       - pwd
