@@ -32,7 +32,7 @@ phases:
       # Push the Docker image to ECR
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      # Writing File Artifactts
+      # Writing File Artifacttss
       - echo Writing image definitions file...
       - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
       - DESCRIBE_NEW_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${TASK_NAME_BE} --region ${AWS_REGION})
