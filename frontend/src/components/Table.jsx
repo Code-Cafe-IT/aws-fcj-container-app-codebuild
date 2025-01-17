@@ -20,12 +20,12 @@ const Table = ({ table }) => {
                         </span>
                     </div>
                     <p className="card-text text-muted">
-                        Orders ID: {table.orders.map(order => order.id).join(', ')}
+                        Orders IDDD: {table.orders.map(order => order.id).join(', ')}
                     </p>
                 </div>
                 <div className="card-footer bg-light text-center">
                     <small className="text-primary">
-                        Mores info <FaInfoCircle className="ml-1" />
+                        Moresss info <FaInfoCircle className="ml-1" />
                     </small>
                 </div>
             </div>
