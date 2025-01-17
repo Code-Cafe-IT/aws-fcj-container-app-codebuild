@@ -35,9 +35,6 @@ phases:
       # Writing File Artifactt
       - echo Writing image definitions file...
       - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
-      - cat imageDetail.json
-      - sed -i "s|{{IMAGE_URL}}|$REPOSITORY_URI:$IMAGE_TAG|g" taskdef.json
-      - cat appspec.yaml
       - pwd
       - ls -al
 artifacts:
