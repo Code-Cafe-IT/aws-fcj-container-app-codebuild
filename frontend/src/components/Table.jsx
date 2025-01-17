@@ -25,7 +25,7 @@ const Table = ({ table }) => {
                 </div>
                 <div className="card-footer bg-light text-center">
                     <small className="text-primary">
-                        More info <FaInfoCircle className="ml-1" />
+                        Mores info <FaInfoCircle className="ml-1" />
                     </small>
                 </div>
             </div>
